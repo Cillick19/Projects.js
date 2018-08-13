@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+      <title>Cyrus Illick's website</title>
+
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <style type="text/css">
+            #canvas {
+                display:block;
+                margin:auto;
+            }
+            .topnav {
+                    background-color: #2C3E50;
+                    overflow: hidden;
+                    }
+                
+                .topnav a {
+                    float: left;
+                    display: block;
+                    color: white;
+                    padding: 2%;
+                    padding-left: 7%;
+                    padding-right: 8.73%;
+                    text-align: center;
+                    text-decoration: none;
+                    font-size: 90%;
+                    }
+                    
+                .topnav a:hover {
+                    background-color: #D8DDEF;
+                    color: black;
+                    }
+
+            #canvasContainer {
+              margin: 0px;
+padding: 0px;
+background-color: black;
+position: absolute;
+            }
+
+
+        </style>
+        <script type="text/javascript">
+            window.addEventListener("load", app);
+
+            function app() {
+              var c = document.getElementById('c');
+              var ctx = c.getContext('2d');
+
+
+              // image = new Image();
+              // //image.addEventListener("load", assetLoaded)
+              // image.src = "../images/blue.png"
+              // var ctx = image
+
+
+
+
+              var w = window.innerWidth - 100;
+              var h = window.innerHeight - 100;
+
+              var r = 50;
+              var vertical = h / 2;
+              var velocity = 0;
+              var gravity = 0.9;
+
+
+              var draw = function() {
+                c.width = w;
+                c.height = h;
+                image = new Image();
+
+                image.src = "../images/blue.png";
+                ctx.drawImage(image, 100, 100);
+                ctx.moveTo(0, h - 20);
+                ctx.lineTo(w, h - 20);
+                ctx.lineWidth = 10;
+                ctx.strokeStyle = 'brown';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.fillStyle = 'blue';
+                ctx.arc(w / 2, vertical, r, Math.PI * 2, false);
+                ctx.fill();
+
+                velocity += gravity;
+                vertical += velocity;
+
+                if(vertical + r/2 + 50 >= h) {
+                  vertical = h - 50 - r/2 + 2;
+                  if(gravity >= 0.02){
+                    gravity += 1;
+                    velocity *= -1;
+                  }
+                  else {
+                    gravity = 0;
+                    velocity = 0;
+                    vertical = h - 50 - r/2;
+                  }
+                }
+              };
+
+              setInterval(draw, 33);
+
+              // function keyDownHandler(evt) {
+              //     // Many games use WASD keys for navigation. We'll listen for these.
+              //     // You can put code in the 'if' blocks to make things happen.
+              //     // The input variable evt is a reference to the keyboard event,
+              //     // and it has attached to it an attribute called 'key' which
+              //     // represents which key (character) was pressed.
+              //     console.log("key down, " + evt.key);
+              //     if (evt.key == 'w') {
+              //         setInterval(draw, 100;)
+              //     }
+              //     else if (evt.key == 's') {
+              //         // down
+              //     }
+              //     else if (evt.key == 'a') {
+              //         // left
+              //     }
+              //     else if (evt.key == 'd') {
+              //         // right
+              //     }
+              // }
+
+
+            }
+
+
+
+        </script>
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-md border">
+                <a class="navbar-brand" href="index.html">Cyrus Illick is a good coder</a>
+                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav mr-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="apps.html">Apps</a></li>
+                        <li class="nav-item"><a class="nav-link" href="social.html">Social</a></li>
+                        <li class="nav-item"><a class="nav-link" href="more.html">Other</a></li>
+                    </ul>
+                </div>
+        </nav>
+        <div id="canvasContainer">
+          <canvas id="c" ></canvas>
+        </div>
+
+    </body>
+</html>

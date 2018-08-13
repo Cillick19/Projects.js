@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript">
+            /*
+            This is an example of how to work with keyboard events in
+            JavaScript. A canvas is included for the beginnings of a game.
+            You will have to decide how to move an object based on the logic
+            of these key press and release events!
+            */
+
+            window.addEventListener("load", app);
+
+            function app() {
+                var canvasContainer = document.getElementById("canvasContainer");
+                var canvasWidth = 800;
+                var canvasHeight = 600;
+                var canvas = document.createElement("canvas");
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+                canvasContainer.appendChild(canvas);
+                var context = canvas.getContext("2d");
+                var request;
+                var bgColor;
+
+                init();
+
+
+                function init() {
+
+                    bgColor = "#000000";
+
+                    // We're going to listen for both key down and key up events.
+                    window.addEventListener("keydown", keyDownHandler);
+                    window.addEventListener("keyup", keyUpHandler);
+                    updateAnimation();
+                    // For this example, we don't need an animation running.
+                    //startAnimation();
+                }
+
+                function keyDownHandler(evt) {
+                    // Many games use WASD keys for navigation. We'll listen for these.
+                    // You can put code in the 'if' blocks to make things happen.
+                    // The input variable evt is a reference to the keyboard event,
+                    // and it has attached to it an attribute called 'key' which
+                    // represents which key (character) was pressed.
+                    console.log("key down, " + evt.key);
+                    if (evt.key == 'w') {
+                        
+                    }
+                    else if (evt.key == 's') {
+                        // down
+                    }
+                    else if (evt.key == 'a') {
+                        // left
+                    }
+                    else if (evt.key == 'd') {
+                        // right
+                    }
+                }
+
+                function keyUpHandler(evt) {
+                    console.log("key released, " + evt.key);
+                    if (evt.key == 'w') {
+
+                    }
+                    else if (evt.key == 's') {
+                        // down
+                    }
+                    else if (evt.key == 'a') {
+                        // left
+                    }
+                    else if (evt.key == 'd') {
+                        // right
+                    }
+                }
+
+                function drawBG() {
+                    context.fillStyle = bgColor;
+                    context.fillRect(0,0,canvasWidth,canvasHeight);
+                }
+
+                function updateAnimation() {
+                    // any code in here runs before every refresh of the screen
+                    //draw background
+                    drawBG();
+                    ship.updateMe();
+                    ship.drawMe();
+                    console.log(ship.velX + "," + ship.velY);
+                }
+
+                function startAnimation() {
+                    function animloop(){
+            		  request = requestAnimationFrame(animloop);
+            		  updateAnimation();
+            		}
+                    animloop();
+            	}
+
+            	function stopAnimation() {
+            		cancelAnimationFrame(request);
+            	}
+
+              function letterW() {
+                ImageW = new Image();
+                ImageW.addEventListener("load", assetLoaded);
+                ImageW.src = "../images/letterW.jpeg";
+
+
+              }
+
+
+
+            } // end of app()
+
+
+
+        </script>
+    </head>
+    <body>
+        <div id="canvasContainer">
+          <canvas id="canvasContainer"></canvas>
+        </div>
+    </body>
+</html>

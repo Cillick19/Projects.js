@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+      <title>Cyrus Illick's website</title>
+
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <style type="text/css">
+            #canvas {
+                display:block;
+                margin:auto;
+            }
+
+        </style>
+        <script type="text/javascript">
+            window.addEventListener("load", app);
+
+            function app() {
+                var canvasContainer = document.getElementById("canvasContainer");
+                var canvasWidth = window.innerWidth - 20;
+                var canvasHeight = window.innerHeight - 20;
+                var canvas = document.createElement("canvas");
+                canvas.id = "canvas";
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+                canvasContainer.appendChild(canvas);
+                var context = canvas.getContext("2d");
+                var particles;
+                var request;
+                var bgColor = "#FFFFFFFF";
+                var assetsLoaded;
+                var assetsToLoad;
+                var imageArray;
+                var numCopies = 50;
+
+
+
+
+                loadAssets();
+
+
+
+                function loadAssets() {
+                    assetsLoaded = 0;
+
+                    Image1 = new Image();
+                    Image1.addEventListener("load", assetLoaded);
+                    Image1.src = "../images/blue.png";
+                    Image1.width = "100";
+                    Image1.height = "100";
+
+                    Image2 = new Image();
+                    Image2.addEventListener("load", assetLoaded);
+                    Image2.src = "../images/blue.png";
+                    Image2.width = "100";
+
+
+                    Image3 = new Image();
+                    Image3.addEventListener("load", assetLoaded);
+                    Image3.src = "../images/blue.png";
+
+                    Image4 = new Image();
+                    Image4.addEventListener("load", assetLoaded);
+                    Image4.src = "../images/blue.png";
+
+                    Image5 = new Image();
+                    Image5.addEventListener("load", assetLoaded);
+                    Image5.src = "../images/blue.png";
+
+                    Image6 = new Image();
+                    Image6.addEventListener("load", assetLoaded);
+                    Image6.src = "../images/blue.png";
+
+                    imageArray = [Image1, Image2, Image3, Image4, Image5, Image6];
+
+                    assetsToLoad = imageArray.length;
+                }
+
+                function assetLoaded() {
+                    assetsLoaded++;
+                    if (assetsLoaded >= assetsToLoad) {
+                        init();
+                    }
+                }
+
+                function init() {
+
+
+                    makeParticles();
+                    drawBG();
+                    startAnimation();
+                }
+
+                function makeParticles() {
+                  window.addEventListener("keydown", keyDownHandler);
+                  window.addEventListener("keyup", keyUpHandler);
+                    particles = [];
+                    var numPics= imageArray.length;
+
+                    for (var j = 0; j < numCopies; j++) {
+                        for (var i = 0; i < numPics; i++) {
+                            var w = imageArray[i].width;
+                            var h = imageArray[i].height;
+                            var rad = 0.5*0.9*Math.sqrt(w*w + h*h)/2;
+                            var red = Math.floor(Math.random()*256);
+                            var green = Math.floor(Math.random()*256);
+                            var blue = Math.floor(Math.random()*256);
+                            var alpha = 0.5;
+                            //var color = "rgba(255,128,0,0.85)";
+                            var color = "rgba(" + red + "," + green + "," + blue + "," + alpha + ")";
+                            var angleInc = 2*Math.PI/600*(0.5 + 0.5*Math.random());
+                            angleInc *= Math.random() < 0.5 ? -1 : 1;
+                            var p = {
+                                x: rad + Math.random()*(canvasWidth - 2*rad),
+                                y: rad + Math.random()*(canvasHeight - 2*rad),
+                                velX: -1.5 + 3*Math.random(),
+                                velY: -1.5 + 3*Math.random(),
+                                fillColor: color,
+                                rad: rad,
+                                image: imageArray[i],
+                                angle: 0,
+                                angleInc: angleInc,
+                                bounceMargin: 0.012*canvasWidth,
+                                drawMe: function() {
+                                    context.fillStyle = this.fillColor;
+                                    context.beginPath();
+                                    context.arc(this.x, this.y, this.rad, 0, 2*Math.PI, true);
+                                    context.closePath();
+                                    context.fill();
+                                    context.save();
+                                    context.translate(this.x, this.y);
+                                    context.rotate(this.angle);
+                                    context.scale(0.5,0.5);
+                                    context.translate(-this.image.width/2, -this.image.height/2);
+
+                                    context.drawImage(this.image, 0, 0);
+                                    context.restore();
+
+                                },
+                                updateMe: function() {
+
+                                    this.x += this.velX;
+                                    this.y += this.velY;
+                                    this.angle = this.angle + (2*Math.PI + this.angleInc) % (2*Math.PI);
+                                    if (this.x < this.rad + this.bounceMargin) {
+                                        this.x = this.rad + this.bounceMargin;
+                                        this.velX *= -1;
+                                    }
+                                    if (this.x > canvasWidth - this.rad - this.bounceMargin) {
+                                        this.x = canvasWidth - this.rad - this.bounceMargin;
+                                        this.velX *= -1;
+                                    }
+                                    if (this.y < this.rad + this.bounceMargin) {
+                                        this.y = this.rad + this.bounceMargin;
+                                        this.velY *= -1;
+                                    }
+                                    if (this.y > canvasHeight - this.rad - this.bounceMargin) {
+                                        this.y = canvasHeight - this.rad - this.bounceMargin;
+                                        this.velY *= -1;
+                                    }
+                                }
+                            };
+                            particles.push(p);
+                        }
+                    }
+                }
+
+                function drawBG() {
+                    context.fillStyle = bgColor;
+                    context.fillRect(0,0,canvasWidth,canvasHeight);
+                }
+
+                function updateParticles() {
+                    for (var i = 0, len = particles.length; i < len; i++) {
+                        particles[i].updateMe();
+                    }
+                }
+
+                function drawParticles() {
+                    for (var i = 0, len = particles.length; i < len; i++) {
+                        particles[i].drawMe();
+                    }
+                }
+
+                function updateAnimation() {
+                    // code here executes on every refresh of the frame
+                    //console.log("hello");
+
+                    // drawBG();
+                    context.fillStyle = "rgba(255,255,255,0.01)";
+                    context.fillRect(0,0,canvas.width, canvas.height);
+                    updateParticles();
+
+                    context.globalAlpha = 0.4;
+                    context.save();
+                    context.scale(0.98,0.98);
+                    context.drawImage(canvas, 0.01/0.98*canvasWidth, 0.01/0.98*canvasHeight);
+                    context.restore();
+
+
+                    drawParticles();
+                }
+
+                function startAnimation() {
+                    function animloop(){
+            		  request = requestAnimationFrame(animloop);
+            		  updateAnimation();
+            		}
+                    animloop();
+            	}
+
+            	function stopAnimation() {
+            		cancelAnimationFrame(request);
+            	}
+
+              function keyDownHandler(evt) {
+                  // Many games use WASD keys for navigation. We'll listen for these.
+                  // You can put code in the 'if' blocks to make things happen.
+                  // The input variable evt is a reference to the keyboard event,
+                  // and it has attached to it an attribute called 'key' which
+                  // represents which key (character) was pressed.
+                  console.log("key down, " + evt.key);
+                  if (evt.key == 'w') {
+
+
+                      location.reload();
+
+                  }
+                  else if (evt.key == 's') {
+                      drawBg();
+                  }
+                  else if (evt.key == ' ') {
+                      location.reload();
+                  }
+                  else if (evt.key == 'd') {
+                      // right
+                  }
+              }
+
+              function keyUpHandler(evt) {
+                  console.log("key released, " + evt.key);
+                  if (evt.key == 'w') {
+
+                  }
+                  else if (evt.key == 's') {
+                      // down
+                  }
+                  else if (evt.key == 'a') {
+                      // left
+                  }
+                  else if (evt.key == 'd') {
+                      // right
+                  }
+              }
+
+            } // end of app()
+        </script>
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-md border">
+                <a class="navbar-brand" href="index.html">Cyrus Illick is a good coder</a>
+                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav mr-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../apps.html">Apps</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../social.html">Social</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../more.html">Other</a></li>
+                    </ul>
+                </div>
+        </nav>
+        <div id="canvasContainer">
+          <canvas id="canvasContainer" ></canvas>
+        </div>
+
+    </body>
+</html>

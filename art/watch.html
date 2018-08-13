@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>JavaScript Stopwatch</title>
+        <link rel="stylesheet" href"style.css" type="text/css">
+        <script type="text/javascript">
+
+            window.addEventListener("load", app);
+
+            function app() {
+                var canvas = document.getElementById("canvas");
+                var context = canvas.getContext("2d");
+                context.fillText("00:00:00",canvas.width/2,canvas.height/2);
+                context.font = "36px Calibri";
+                context.textAlign = "center";
+
+                context.fillText = 'black';
+                var start = document.getElementById("start");
+                var stop = document.getElementById("stop");
+                var reset = document.getElementById("reset");
+                var hours = 0;
+                var minutes = 0;
+                var seconds = 0;
+                var time;
+
+                context.fillStyle = "#FFFFFF";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (var i = 0; i < 50; i++) {
+                        var x = Math.random()*canvas.width;
+                        var y = Math.random()*canvas.height;
+                        var rad = 20 + Math.random()*50;
+                        var red = Math.floor(Math.random()*256);
+                        var green = Math.floor(Math.random()*256);
+                        var blue = Math.floor(Math.random()*256);
+                        context.fillStyle = "rgba(" + red + "," + green + "," + blue + ",0.25)";
+                        context.beginPath();
+                        context.arc(x, y, rad, 0, 2*Math.PI, true);
+                        context.fill();
+                }
+
+                function add() {
+                    seconds++;
+                    if (seconds >= 60) {
+                        seconds = 0;
+                        minutes++;
+                        if (minutes >= 60) {
+                            minutes = 0;
+                            hours++;
+                        }
+                    }
+                    ctxText.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+                    timer();
+                }
+
+                function timer() {
+                    time = setTimeout(add, 1000);
+                }
+
+                timer();
+
+                start.onclick = timer;
+                stop.onclick = function() {
+                    clearTimeout(time);
+                }
+
+                reset.onclick = function() {
+                    ctxText.textContent = "00:00:00";
+                    hours = 0;
+                    minutes = 0;
+                    seconds = 0;
+                }
+
+            }
+
+        </script>
+
+
+    </head>
+    <body>
+        <h1>Stopwatch</h1>
+
+        <canvas id="canvas" width="600px" height="400px"></canvas>
+
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+    </body>
+</html>
